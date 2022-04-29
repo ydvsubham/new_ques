@@ -1,62 +1,82 @@
 import React from 'react'
 import Question from './Question'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
+import {useStateWithCallback, useStateWithCallbackLazy} from 'use-state-with-callback'
+
 const Searchques = ({ questionBank, questionTags }) => {
-    const [searchedQuestion, setSearchedQuestion] = useState([...questionBank])
-    const [checkedTag, setCheckedTag] = useState([...questionTags])
+    const [searchedQuestion, setSearchedQuestion] = useState([])
+    const [checkedTag, setCheckedTag] = useStateWithCallbackLazy([])
     const [searchByName, setSearchByName] = useState("")
-    //const [searchedId, setSearchedId] = useState("")
-    const searchfun = () => {
-        let newques = []
-        ///console.log(checkedTag)
-        checkedTag.forEach((itm, i) => {
-            if (itm.ischecked ) {
-                questionBank.forEach((item)=>{
-                    if(item.tagid === itm.id){
-                        let f=true
-                        newques.forEach((item2)=>{
-                            console.log()
-                            if(item.id===item2.id){
-                               // console.log()
-                                f=false
+    const searchfun = (e,tagValue) => {
+        if(e.target.checked){
+            // async function settags() {setCheckedTag([...checkedTag,tagValue])}
+            // settags().then(
+            //     function(value) {console.log(checkedTag)},
+            //     function(error) {console.log(error);}
+            //   )
+                     
+            setCheckedTag([...checkedTag, tagValue], (currt) => {
+                let tempques=[]   
+                currt.forEach((thistagval)=>{
+                    //console.log(thistagval)
+                    questionBank.forEach((thisques)=>{
+                        if(thisques.tagid.includes(thistagval)){
+                            let f=true
+                            tempques.forEach((tmpques)=>{
+                                if(tmpques.id===thisques.id){
+                                    f=false
+                                }
+                            })
+                            if(f){
+                                tempques=[...tempques,thisques]
                             }
-                        })
-                        if(f){
-                            newques = [...newques, item]
+                            
                         }
-                        
-                    }
+                    })
                 })
-                //console.log("................")                
-            }
-        })
-        console.log(questionBank)
-        console.log(newques)
-        setSearchedQuestion(newques)
-        //setQuestionBank(questionBank.filter((ques,i)=>!checkedTag[i].ischecked))
+                setSearchedQuestion(tempques)
+              })
+            
+        }else{
+            setCheckedTag(checkedTag.filter((tag)=>tag!==tagValue),(currt) => {
+                let tempques=[]   
+                currt.forEach((thistagval)=>{
+                    //console.log(thistagval)
+                    questionBank.forEach((thisques)=>{
+                        if(thisques.tagid.includes(thistagval)){
+                            let f=true
+                            tempques.forEach((tmpques)=>{
+                                if(tmpques.id===thisques.id){
+                                    f=false
+                                }
+                            })
+                            if(f){
+                                tempques=[...tempques,thisques]
+                            }
+                            
+                        }
+                    })
+                })
+                setSearchedQuestion(tempques)
+              })
+        }
+        
     }
     const onSubmitTyped = (e) => {
         
         e.preventDefault()
         setSearchByName(searchByName.toLowerCase())
-        
-        let temptag = questionTags
-        let searchedId=-1
-        temptag.forEach((itm) => {
-            
-            if (itm.name.toLowerCase() === searchByName) {
-                
-                searchedId=itm.id
-                //console.log("yes")
-            }
+        let newques=[]
+        questionBank.forEach((itm) => {
+           let quesArray=itm.ques.split(" ")
+           quesArray.forEach(questxt => {
+               if(questxt.toLowerCase()===searchByName){
+                   newques=[...newques,itm]
+                   return
+               }
+           });
         })
-        let newques = []
-        let tempqb = questionBank
-        tempqb.forEach((itm) => {
-            if (itm.tagid === searchedId) {
-                newques = [...newques, itm]
-            }
-        })
+        console.log(newques)
         setSearchedQuestion(newques)
         setSearchByName("")
     }
@@ -74,17 +94,11 @@ const Searchques = ({ questionBank, questionTags }) => {
                                             <input
                                                 className="form-check-input"
                                                 type="checkbox"
-                                                id={"flexCheckDefault" + tag.id}
-                                                onChange={e => {
-                                                    const newCheckboxes = [...checkedTag]
-                                                    newCheckboxes[i].ischecked = e.target.checked
-                                                    setCheckedTag(newCheckboxes)
-                                                    //console.log(checkedTag)
-                                                    searchfun()
-                                                }}
-                                                checked={checkedTag[i].ischecked}
+                                                id={"flexCheckDefault" + tag.value}
+                                                onChange={e => searchfun(e,tag.value)}
+                                                //checked={checkedTag[i].ischecked}
                                             />
-                                            <label className="form-check-label" htmlFor={"flexCheckDefault" + tag.id}>{tag.name} </label>
+                                            <label className="form-check-label" htmlFor={"flexCheckDefault" + tag.value}>{tag.label} </label>
                                         </div>)
 
                                 })
@@ -111,7 +125,7 @@ const Searchques = ({ questionBank, questionTags }) => {
             </div>
             {
                 searchedQuestion.map((ques, i) => {
-                    return (<Question key={i} ques={ques} i={i} />)
+                    return (<Question key={i} ques={ques} i={i} questionTags={questionTags} />)
 
                 })
             }

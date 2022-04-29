@@ -1,19 +1,26 @@
 import React from 'react'
 import { useState } from 'react'
+import Select from 'react-select';
 const AddQuestion = ({questionTags,addQues}) => {
     const[ques,setQues]=useState("")
     const[thisAns,setThisAns]=useState("")
-    const[quesTag,setQuesTag]=useState("")
+    const[quesTag,setQuesTag]=useState([])
+    
     const onSubmit =(e)=>{
         e.preventDefault()
+        let tags=[]
+        quesTag.forEach((itm)=>{
+            tags.push(itm.value)
+        })
+        console.log(tags)
         addQues({
             ques:ques,
-            tagid:parseInt(quesTag),
+            tagid:tags,
             ans:thisAns
         })
         setQues("")
         setThisAns("")
-        setQuesTag("")
+        setQuesTag([])
     }
     return (
         <div className="container">]
@@ -61,19 +68,17 @@ const AddQuestion = ({questionTags,addQues}) => {
                                             </div>
                                         </div>
                                         
-                                        <div className="row">
+                                        <div className="row mt-3">
                                             <div className="col-md-12 mb-3">
                                                 <div className="form-group">
-                                                <label htmlFor="form_need">Please specify the tag  *</label>
-                                                    <select onChange={e => setQuesTag(e.target.value)} value={quesTag}    id="form_need" name="need" className="form-control" required="required" data-error="Please specify your need.">
-                                                    {<option value={""}  disabled>--Select Question's tag--</option>}
-                                                    {
-                                                        questionTags.map(tag => {
-                                                            return(<option key={tag.id} value={tag.id}>{tag.name}</option>)
-                                                            
-                                                        })
-                                                    }
-                                                    </select>
+                                                    <label htmlFor="form_need">Please specify the tags  *</label>
+                                                    <Select  
+                                                        id="form_need" 
+                                                        options={questionTags} 
+                                                        isMulti
+                                                        value={quesTag}
+                                                        onChange={opt => setQuesTag(opt)}
+                                                    />
                                                 </div>
                                             </div>
                                             <div className="col-md-12"> <input type="submit" className="btn btn-success btn-send pt-2 btn-block " defaultValue={"Send Message"} /> </div>
