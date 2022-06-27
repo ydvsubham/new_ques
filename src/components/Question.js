@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-const Question = ({ ques, i,questionTags }) => {
-    const [quesId, setQuesId] = useState(null)
+const Question = ({ ques, i,questionTags,quesId,changeQuesId }) => {
+    // const [quesId, setQuesId] = useState(null)
     //console.log(ques)
     
     let temptag=[]
@@ -16,10 +16,10 @@ const Question = ({ ques, i,questionTags }) => {
         temptag=[...temptag,temp]
     });
     const[tags,setTags]=useState(temptag)
-    const onSubmit = (e) => {
-        e.preventDefault()
-        setQuesId()
-    }
+    // const onSubmit = (e) => {
+    //     e.preventDefault()
+    //     setQuesId()
+    // }
     return (
         <div className="col-8 mb-4">
             <div className="card quescard d-flex flex-row">
@@ -31,7 +31,7 @@ const Question = ({ ques, i,questionTags }) => {
                     <button type="button" className="btn btn-primary updt-btn mx-3">
                         <Link to={"" + ques.id} >{"Edit"}</Link>
                     </button>
-                    <button type="button" className="btn btn-primary updt-btn" onClick={e => setQuesId(ques.id)} >
+                    <button type="button" className="btn btn-primary updt-btn" onClick={e => changeQuesId(ques.id)} >
                         Show Answer
                     </button>
                 </div>
@@ -44,12 +44,20 @@ const Question = ({ ques, i,questionTags }) => {
                     }
                 </div>
             </div>
-            <div className={`card anscard mb-4 ${ques.id === quesId ? "showAns" : "hideAns"}`}>
+            {
+                ques.id === quesId?<div className="card anscard mb-4 showAns">
                 <div className="card-body">
 
                     <p className="card-text"><b>Ans : </b>{ques.ans}</p>
                 </div>
-            </div>
+            </div>:""
+            }
+            {/* <div className={`card anscard mb-4 ${ques.id === quesId ? "showAns" : "hideAns"}`}>
+                <div className="card-body">
+
+                    <p className="card-text"><b>Ans : </b>{ques.ans}</p>
+                </div>
+            </div> */}
         </div>
     )
 }

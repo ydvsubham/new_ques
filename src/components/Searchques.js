@@ -7,6 +7,11 @@ const Searchques = ({ questionBank, questionTags }) => {
     const [searchedQuestion, setSearchedQuestion] = useState([])
     const [checkedTag, setCheckedTag] = useStateWithCallbackLazy([])
     const [searchByName, setSearchByName] = useState("")
+    const [quesId, setQuesId] = useState(null)
+    const changeQuesId=(thisQuesId)=>{
+        setQuesId(thisQuesId)
+
+    }
     const searchfun = (e,tagValue) => {
         if(e.target.checked){
             // async function settags() {setCheckedTag([...checkedTag,tagValue])}
@@ -104,16 +109,17 @@ const Searchques = ({ questionBank, questionTags }) => {
                                 })
                             }
                         </div>
-                        <div className="input-group w-50">
-                            <div className="form-outline" >
-                                <form className='form-control d-flex flex-row' onSubmit={onSubmitTyped}>
+                        <div className="input-group d-flex justify-content-end w-50 w-50">
+                            <div className="form-outline " >
+                                <form className='form-control d-flex flex-row p-0 rounded-pill' onSubmit={onSubmitTyped}>
                                     <input type="search"
                                         id="form1"
-                                        className="form-control"
+                                        className="form-control rounded-pill"
                                         value={searchByName}
                                         onChange={(e) => setSearchByName(e.target.value)}
+                                        placeholder="search by keyword"
                                     />
-                                    <button type="button" id="form2" className="btn btn-primary" onClick={onSubmitTyped}>
+                                    <button type="button" id="form2" className="btn btn-primary rounded-pill" onClick={onSubmitTyped}>
                                         Search
                                     </button>
                                 </form>
@@ -125,7 +131,7 @@ const Searchques = ({ questionBank, questionTags }) => {
             </div>
             {
                 searchedQuestion.map((ques, i) => {
-                    return (<Question key={i} ques={ques} i={i} questionTags={questionTags} />)
+                    return (<Question key={i} ques={ques} i={i} questionTags={questionTags}  quesId={quesId} changeQuesId={changeQuesId} />)
 
                 })
             }
