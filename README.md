@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-This project is live on (https://app.netlify.com/sites/flourishing-granita-e9681c/overview).
+This project is live on [https://app.netlify.com/sites/flourishing-granita-e9681c/overview](https://flourishing-granita-e9681c.netlify.app/).
 
 ## Available Scripts
 
