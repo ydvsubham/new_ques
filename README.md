@@ -1,6 +1,6 @@
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is live on (https://app.netlify.com/sites/flourishing-granita-e9681c/overview).
 
 ## Available Scripts
 
